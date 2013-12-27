@@ -56,5 +56,4 @@
 
 #### TODO
 
-  - default values for *_paths
-  - default directories
+  - notifications for finished deployments
