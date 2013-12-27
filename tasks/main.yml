@@ -32,7 +32,9 @@
     state: "directory"
     owner: "{{ user }}"
     group: "{{ user }}"
-  with_items: $directories
+  with_items:
+    - $default_directories
+    - $directories
 
 - name: create configuration files
   template:

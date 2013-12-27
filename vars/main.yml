@@ -1,0 +1,7 @@
+build_path: "{{ deploy_to }}/releases/{{ timestamp.stdout }}"
+shared_path: "{{ deploy_to }}/shared"
+current_path: "{{ deploy_to }}/current"
+default_directories:
+  - "{{ deploy_to }}"
+  - "{{ deploy_to }}/releases"
+  - "{{ shared_path }}"
