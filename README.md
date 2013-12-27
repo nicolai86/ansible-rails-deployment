@@ -11,7 +11,7 @@
 
       roles:
         -
-          role: nicolai86.ansible-deployment
+          role: nicolai86.ansible-rails-deployment
 
           repo: git@example.com:app
           branch: develop
