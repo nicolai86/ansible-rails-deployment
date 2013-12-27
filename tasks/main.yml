@@ -83,7 +83,7 @@
     current: "{{ current_path }}"
     migrate: "yes"
     bundled: "yes"
-  when: "'{{ migrate }}' == 'yes'"
+  when: migrate
 
 - name: precompile asset files
   rails:
@@ -92,7 +92,7 @@
     current: "{{ current_path }}"
     assets: "yes"
     bundled: "yes"
-  when: "'{{ compile_assets }}' == 'yes'"
+  when: compile_assets
 
 - name: update the current symlink
   file:
