@@ -32,6 +32,7 @@
     state: "directory"
     owner: "{{ user }}"
     group: "{{ user }}"
+    mode: "0755"
   with_items:
     - $default_directories
     - $directories
