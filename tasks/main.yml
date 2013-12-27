@@ -103,3 +103,4 @@
 
 - name: cleanup old releases
   shell: ls -dt {{ deploy_to }}/releases/* | tail -n +6 | xargs rm -fr
+  when: cleanup

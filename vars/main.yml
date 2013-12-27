@@ -1,6 +1,16 @@
+# keep only last 5 deployments
+cleanup: true
+
+# path where new releases are checked out into
 build_path: "{{ deploy_to }}/releases/{{ timestamp.stdout }}"
+
+# shared path for configuration files, uploads, etc.
 shared_path: "{{ deploy_to }}/shared"
+
+# path to symlink the new deploy to
 current_path: "{{ deploy_to }}/current"
+
+# default directories necessary for the role to work. DO NOT CHANGE!!
 default_directories:
   - "{{ deploy_to }}"
   - "{{ deploy_to }}/releases"
