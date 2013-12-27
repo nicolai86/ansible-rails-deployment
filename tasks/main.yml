@@ -1,0 +1,103 @@
+---
+- name: register timestamp
+  shell: "date +%Y%m%d%H%M%S"
+  register: timestamp
+
+- name: add GEM_HOME to .bashrc
+  lineinfile:
+    dest: "{{ home_directory }}/.bashrc"
+    insertafter: BOF
+    regexp: ^export.GEM_HOME
+    line: "export GEM_HOME=$HOME/.gem"
+    state: present
+
+- name: update PATH with $GEM_HOME/bin
+  lineinfile:
+    dest: "{{ home_directory }}/.bashrc"
+    insertafter: BOF
+    regexp: ^export.PATH=.GEM_HOME
+    line: "export PATH=$GEM_HOME/bin:$PATH"
+    state: present
+
+- name: ensure releases directory exists
+  file:
+    path: "{{ deploy_to }}/releases"
+    state: "directory"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+
+- name: create shared directories
+  file:
+    path: "{{ item }}"
+    state: "directory"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  with_items: $directories
+
+- name: create configuration files
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0600"
+  with_items: $templates
+
+- name: create or update the bare Git repository
+  git:
+    repo: "{{ repo }}"
+    dest: "{{ deploy_to }}/scm"
+    version: "{{ branch }}"
+    bare: "yes"
+    update: "yes"
+
+- name: clone the bare Git repository to destination
+  git:
+    repo: "{{ deploy_to }}/scm"
+    dest: "{{ build_path }}"
+    version: "{{ branch }}"
+    bare: "no"
+
+- name: symlink shared files
+  file:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    state: "link"
+    force: "yes"
+    recurse: "yes"
+  with_items: $symlinks
+
+- name: run Bundle
+  bundle:
+    path: "{{ build_path }}/vendor/bundle"
+    gemfile: "{{ build_path }}/Gemfile"
+    deployment: "yes"
+    binstubs: "yes"
+
+- name: migrate the database
+  rails:
+    path: "{{ build_path }}"
+    rails_env: "{{ rails_env }}"
+    current: "{{ current_path }}"
+    migrate: "yes"
+    bundled: "yes"
+  when: "'{{ migrate }}' == 'yes'"
+
+- name: precompile asset files
+  rails:
+    path: "{{ build_path }}"
+    rails_env: "{{ rails_env }}"
+    current: "{{ current_path }}"
+    assets: "yes"
+    bundled: "yes"
+  when: "'{{ compile_assets }}' == 'yes'"
+
+- name: update the current symlink
+  file:
+    src: "{{ build_path }}"
+    dest: "{{ current_path }}"
+    state: "link"
+    force: "yes"
+
+- name: cleanup old releases
+  shell: ls -dt {{ deploy_to }}/releases/* | tail -n +6 | xargs rm -fr
