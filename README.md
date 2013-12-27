@@ -17,9 +17,6 @@
           branch: develop
 
           deploy_to: "{{ home_directory }}"
-          build_path: "{{ deploy_to }}/releases/{{ timestamp.stdout }}"
-          shared_path: "{{ deploy_to }}/shared"
-          current_path: "{{ deploy_to }}/current"
           migrate: yes
           compile_assets: yes
 
