@@ -53,3 +53,8 @@
 
   - does not support rollbacks because ansible does not support error handling (yet)
   - does not contain any restart logic (will change in the future)
+
+#### TODO
+
+  - default values for *_paths
+  - default directories
