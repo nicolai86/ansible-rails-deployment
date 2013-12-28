@@ -1,4 +1,4 @@
-# ansible-deployment
+# ansible-rails-deployment
 
     ---
     - hosts: server
