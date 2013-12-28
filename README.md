@@ -1,5 +1,7 @@
 # ansible-rails-deployment
 
+example usage:
+
     ---
     - hosts: server
       user: app
