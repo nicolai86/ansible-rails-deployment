@@ -52,7 +52,3 @@ example usage:
 
   - does not support rollbacks because ansible does not support error handling (yet)
   - does not contain any restart logic (will change in the future)
-
-#### TODO
-
-  - notifications for finished deployments
