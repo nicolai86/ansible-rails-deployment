@@ -1,7 +1,5 @@
 ---
-- name: register timestamp
-  shell: "date +%Y%m%d%H%M%S"
-  register: timestamp
+- action: deployment_facts
 
 - name: add GEM_HOME to .bashrc
   lineinfile:
@@ -95,9 +93,12 @@
     bundled: "yes"
   when: compile_assets
 
+- name: move build_path to release_path
+  shell: "mv {{ build_path }} {{ release_path }}"
+
 - name: update the current symlink
   file:
-    src: "{{ build_path }}"
+    src: "{{ release_path }}"
     dest: "{{ current_path }}"
     state: "link"
     force: "yes"

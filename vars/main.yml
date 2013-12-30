@@ -1,8 +1,11 @@
 # keep only last 5 deployments
 cleanup: true
 
-# path where new releases are checked out into
-build_path: "{{ deploy_to }}/releases/{{ timestamp.stdout }}"
+# path where new releases are build
+build_path: "{{ deployment.build_path }}"
+
+# path where successful releases are moved to
+release_path: "{{ deploy_to }}/releases/{{ deployment.timestamp }}"
 
 # shared path for configuration files, uploads, etc.
 shared_path: "{{ deploy_to }}/shared"
