@@ -17,13 +17,6 @@
     line: "export PATH=$GEM_HOME/bin:$PATH"
     state: present
 
-- name: ensure releases directory exists
-  file:
-    path: "{{ deploy_to }}/releases"
-    state: "directory"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-
 - name: create shared directories
   file:
     path: "{{ item }}"

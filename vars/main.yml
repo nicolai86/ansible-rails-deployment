@@ -18,3 +18,9 @@ default_directories:
   - "{{ deploy_to }}"
   - "{{ deploy_to }}/releases"
   - "{{ shared_path }}"
+
+# migrate database by default  
+migrate: yes
+
+# compile new assets by default
+compile_assets: yes
