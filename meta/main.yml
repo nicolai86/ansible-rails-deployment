@@ -3,7 +3,7 @@ galaxy_info:
   author: "Raphael Randschau"
   license: MIT
   min_ansible_version: 1.4
-  version: 0.1
+  version: 0.2
   platforms:
    - name: Ubuntu
      versions:
