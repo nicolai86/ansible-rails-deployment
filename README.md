@@ -35,6 +35,17 @@ example usage:
           templates:
             - { src: "templates/env.js", dest: "{{ shared_path }}/.env" }
 
+          tags: deploy
+
+        -
+          role: restart
+
+          service: application:*
+
+          tags:
+            - deploy
+            - rollback
+
 
 #### requirements
 
@@ -50,5 +61,4 @@ example usage:
 
 #### limitations
 
-  - does not support rollbacks because ansible does not support error handling (yet)
-  - does not contain any restart logic (will change in the future)
+  - you need to write your own restart handling
