@@ -63,7 +63,7 @@
 
 - name: run Bundle
   bundle:
-    path: "{{ build_path }}/vendor/bundle"
+    path: "{{ shared_path }}/vendor/bundle"
     gemfile: "{{ build_path }}/Gemfile"
     deployment: "yes"
     binstubs: "yes"
