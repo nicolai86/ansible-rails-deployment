@@ -12,7 +12,10 @@ galaxy_info:
       - raring
       - saucy
   categories:
-   - web
+    - web
+  dependencies:
+    - nicolai86.ansible-rails
+    - nicolai86.ansible-deployment-facts
 dependencies:
   - nicolai86.ansible-rails
   - nicolai86.ansible-deployment-facts
