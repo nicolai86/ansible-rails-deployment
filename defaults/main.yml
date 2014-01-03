@@ -1,0 +1,22 @@
+# keep only last 5 deployments
+cleanup: true
+
+# default directories necessary for the role to work. DO NOT CHANGE!!
+default_directories:
+  - "{{ deploy_to }}"
+  - "{{ deploy_to }}/releases"
+  - "{{ shared_path }}"
+  - "{{ shared_path }}/vendor"
+  - "{{ shared_path }}/vendor/bundle"
+
+# migrate database by default
+migrate: yes
+
+# compile new assets by default
+compile_assets: yes
+
+# force migration even if no differences are found
+force_migrate: no
+
+# force asset compilation even if no differences are found
+force_asset_compilation: no

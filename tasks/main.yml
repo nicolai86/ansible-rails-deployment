@@ -80,7 +80,7 @@
     current: "{{ current_path }}"
     migrate: "yes"
     bundled: "yes"
-    force: "{{ force_migrate }}"
+    force: $force_migrate
   when: migrate
 
 - name: precompile asset files
