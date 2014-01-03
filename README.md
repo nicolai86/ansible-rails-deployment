@@ -21,6 +21,8 @@ example usage:
           deploy_to: "{{ home_directory }}"
           migrate: yes
           compile_assets: yes
+          force_migrate: no
+          force_asset_compilation: no
 
           symlinks:
             - { src: "{{ shared_path }}/vendor/bundle", dest: "{{ build_path }}/vendor/bundle" }
