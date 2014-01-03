@@ -80,6 +80,7 @@
     current: "{{ current_path }}"
     migrate: "yes"
     bundled: "yes"
+    force: "{{ force_migrate }}"
   when: migrate
 
 - name: precompile asset files
@@ -89,6 +90,7 @@
     current: "{{ current_path }}"
     assets: "yes"
     bundled: "yes"
+    force: "{{ force_asset_compilation }}"
   when: compile_assets
 
 - name: move build_path to release_path
