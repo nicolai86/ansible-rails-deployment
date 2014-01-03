@@ -51,6 +51,11 @@
     dest: "{{ build_path }}"
     version: "{{ branch }}"
     bare: "no"
+    update: "yes"
+
+- file:
+    path: "{{ build_path }}"
+    mode: 0755
 
 - name: symlink shared files
   file:
