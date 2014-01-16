@@ -1,6 +1,7 @@
 ---
 galaxy_info:
   author: "Raphael Randschau"
+  description: "deploys rails application like capistrano or mina do"
   license: MIT
   min_ansible_version: 1.4
   version: 0.2
