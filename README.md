@@ -1,4 +1,6 @@
-# ansible-rails-deployment
+# rails-deployment
+
+A role that executes common tasks when deploying ruby on rails applications.
 
 example usage:
 
@@ -13,7 +15,7 @@ example usage:
 
       roles:
         -
-          role: nicolai86.ansible-rails-deployment
+          role: nicolai86.rails-deployment
 
           repo: git@example.com:app
           branch: develop

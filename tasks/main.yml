@@ -1,6 +1,4 @@
 ---
-- action: deployment_facts
-
 - name: add GEM_HOME to .bashrc
   lineinfile:
     dest: "{{ home_directory }}/.bashrc"
@@ -17,61 +15,12 @@
     line: "export PATH=$GEM_HOME/bin:$PATH"
     state: present
 
-- name: create shared directories
-  file:
-    path: "{{ item }}"
-    state: "directory"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: "0755"
-  with_items:
-    - $default_directories
-    - $directories
-
-- name: create configuration files
-  template:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    owner: "{{ user }}"
-    group: "{{ user }}"
-    mode: "0600"
-  with_items: $templates
-
-- name: create or update the bare Git repository
-  git:
-    repo: "{{ repo }}"
-    dest: "{{ deploy_to }}/scm"
-    version: "{{ branch }}"
-    bare: "yes"
-    update: "yes"
-
-- name: clone the bare Git repository to destination
-  git:
-    repo: "{{ deploy_to }}/scm"
-    dest: "{{ build_path }}"
-    version: "{{ branch }}"
-    bare: "no"
-    update: "yes"
-
-- file:
-    path: "{{ build_path }}"
-    mode: 0755
-
-- name: symlink shared files
-  file:
-    src: "{{ item.src }}"
-    dest: "{{ item.dest }}"
-    state: "link"
-    force: "yes"
-    recurse: "yes"
-  with_items: $symlinks
-
-- name: run Bundle
+- name: execute bundler
   bundle:
     path: "{{ shared_path }}/vendor/bundle"
     gemfile: "{{ build_path }}/Gemfile"
-    deployment: "yes"
-    binstubs: "yes"
+    deployment: True
+    binstubs: True
 
 - name: migrate the database
   rails:
@@ -92,17 +41,3 @@
     bundled: "yes"
     force: "{{ force_asset_compilation }}"
   when: compile_assets
-
-- name: move build_path to release_path
-  shell: "mv {{ build_path }} {{ release_path }}"
-
-- name: update the current symlink
-  file:
-    src: "{{ release_path }}"
-    dest: "{{ current_path }}"
-    state: "link"
-    force: "yes"
-
-- name: cleanup old releases
-  shell: ls -dt {{ deploy_to }}/releases/* | tail -n +6 | xargs rm -fr
-  when: cleanup
