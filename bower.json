@@ -1,6 +1,6 @@
 {
   "name": "Ansible Rails Deployment",
-  "version": "0.4.1",
+  "version": "0.5.2",
   "homepage": "https://github.com/nicolai86/ansible-rails-deployment",
   "authors": [
     "Raphael Randschau"
@@ -9,6 +9,8 @@
   "license": "MIT",
   "dependencies": {
     "nicolai86.ansible-rails": "nicolai86/ansible-rails#~0.3.2",
-    "nicolai86.ansible-deployment-facts": "nicolai86/ansible-deployment-facts#~0.1.2"
+    "nicolai86.ansible-deployment-facts": "nicolai86/ansible-deployment-facts#~0.1.2",
+    "nicolai86.ansible-prepare-release": "nicolai86/ansible-prepare-release#~0.1.1",
+    "nicolai86.ansible-finalize-release": "nicolai86/ansible-finalize-release#~0.1"
   }
 }
