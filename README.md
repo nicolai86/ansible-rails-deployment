@@ -2,7 +2,8 @@
 
 A role that executes common tasks when deploying ruby on rails applications.
 
-depends on [prepare-release][1] and [finalize-release][2] roles.
+depends on [prepare-release][1] and [finalize-release][2] roles to checkout a new
+version from your git versioned application.
 
 example usage:
 
