@@ -2,6 +2,8 @@
 
 A role that executes common tasks when deploying ruby on rails applications.
 
+depends on [prepare-release][1] and [finalize-release][2] roles.
+
 example usage:
 
     ---
@@ -12,19 +14,14 @@ example usage:
         user: app
         home_directory: "/home/{{ user }}"
         rails_env: "staging"
+        deploy_to: "{{ home_directory }}"
 
       roles:
         -
-          role: nicolai86.rails-deployment
+          role: nicolai86.prepare-release
 
           repo: git@example.com:app
           branch: develop
-
-          deploy_to: "{{ home_directory }}"
-          migrate: yes
-          compile_assets: yes
-          force_migrate: no
-          force_asset_compilation: no
 
           symlinks:
             - { src: "{{ shared_path }}/vendor/bundle", dest: "{{ build_path }}/vendor/bundle" }
@@ -38,6 +35,21 @@ example usage:
 
           templates:
             - { src: "templates/env.js", dest: "{{ shared_path }}/.env" }
+
+          tags: deploy
+
+        -
+          role: nicolai86.rails-deployment
+
+          migrate: yes
+          compile_assets: yes
+          force_migrate: no
+          force_asset_compilation: no
+
+          tags: deploy
+
+        -
+          role: nicolai86.finalize-release
 
           tags: deploy
 
@@ -66,3 +78,6 @@ example usage:
 #### limitations
 
   - you need to write your own restart handling
+
+[1]:https://github.com/nicolai86/ansible-prepare-release
+[2]:https://github.com/nicolai86/ansible-finalize-release
