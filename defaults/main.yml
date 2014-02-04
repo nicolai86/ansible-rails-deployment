@@ -9,3 +9,14 @@ force_migrate: no
 
 # force asset compilation even if no differences are found
 force_asset_compilation: no
+
+# paths to check by default for changes when running migrations
+migrate_diff_paths:
+  - { current: "{{ current_path }}/db/schema.rb", next: "{{ build_path }}/db/schema.rb" }
+  - { current: "{{ current_path }}/db/structure.sql", next: "{{ build_path }}/db/structure.sql" }
+
+# paths to check by defualt for changes when compiling assets
+asset_precompile_diff_paths:
+  - { current: "{{ current_path }}/app/assets", next: "{{ build_path }}/app/assets" }
+  - { current: "{{ current_path }}/vendor/assets", next: "{{ build_path }}/vendor/assets" }
+  - { current: "{{ current_path }}/Gemfile.lock", next: "{{ build_path }}/Gemfile.lock" }

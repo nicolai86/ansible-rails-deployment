@@ -28,9 +28,7 @@
     rails_env: "{{ rails_env }}"
     bundled: yes
     command: 'db:migrate'
-    diff_paths:
-      - { current: "{{ current_path }}/db/schema.rb", next: "{{ build_path }}/db/schema.rb" }
-      - { current: "{{ current_path }}/db/structure.sql", next: "{{ build_path }}/db/structure.sql" }
+    diff_paths: $migrate_diff_paths
     force: $force_migrate
   when: migrate
 
@@ -40,9 +38,6 @@
     rails_env: "{{ rails_env }}"
     bundled: yes
     command: 'assets:precompile'
-    diff_paths:
-      - { current: "{{ current_path }}/app/assets", next: "{{ build_path }}/app/assets" }
-      - { current: "{{ current_path }}/vendor/assets", next: "{{ build_path }}/vendor/assets" }
-      - { current: "{{ current_path }}/Gemfile.lock", next: "{{ build_path }}/Gemfile.lock" }
+    diff_paths: $asset_precompile_diff_paths
     force: $force_asset_compilation
   when: compile_assets
