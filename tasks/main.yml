@@ -23,21 +23,21 @@
     binstubs: True
 
 - name: migrate the database
-  rails:
+  rake:
     path: "{{ build_path }}"
     rails_env: "{{ rails_env }}"
     current: "{{ current_path }}"
-    migrate: "yes"
-    bundled: "yes"
+    bundled: yes
+    migrate: yes
     force: $force_migrate
   when: migrate
 
 - name: precompile asset files
-  rails:
+  rake:
     path: "{{ build_path }}"
     rails_env: "{{ rails_env }}"
     current: "{{ current_path }}"
-    assets: "yes"
-    bundled: "yes"
+    bundled: yes
+    assets: yes
     force: "{{ force_asset_compilation }}"
   when: compile_assets
