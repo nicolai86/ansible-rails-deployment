@@ -26,9 +26,11 @@
   rake:
     path: "{{ build_path }}"
     rails_env: "{{ rails_env }}"
-    current: "{{ current_path }}"
     bundled: yes
-    migrate: yes
+    command: 'db:migrate'
+    diff_paths:
+      - { current: "{{ current_path }}/db/schema.rb", next: "{{ build_path }}/db/schema.rb" }
+      - { current: "{{ current_path }}/db/structure.sql", next: "{{ build_path }}/db/structure.sql" }
     force: $force_migrate
   when: migrate
 
@@ -36,8 +38,11 @@
   rake:
     path: "{{ build_path }}"
     rails_env: "{{ rails_env }}"
-    current: "{{ current_path }}"
     bundled: yes
-    assets: yes
-    force: "{{ force_asset_compilation }}"
+    command: 'assets:precompile'
+    diff_paths:
+      - { current: "{{ current_path }}/app/assets", next: "{{ build_path }}/app/assets" }
+      - { current: "{{ current_path }}/vendor/assets", next: "{{ build_path }}/vendor/assets" }
+      - { current: "{{ current_path }}/Gemfile.lock", next: "{{ build_path }}/Gemfile.lock" }
+    force: $force_asset_compilation
   when: compile_assets
