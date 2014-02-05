@@ -67,6 +67,21 @@ example usage:
             - rollback
 
 
+#### configuration
+
+Most parts of the role can be configured using variables. For example, if you are using rails but using SQL for schema management,
+you can easily configure rails-deployment to compare the structure.sql files instead of schema.rb like this:
+
+    -
+      role: nicolai86.rails-deployment
+
+      migrate: yes
+
+      migrate_diff_paths:
+        - { current: "{{ current_path }}/db/structure.sql", next: "{{ build_path }}/db/structure.sql" }
+
+See defaults/main.yml for details about available variables.
+
 #### requirements
 
   - all gem binaries (e.g. bundle, rake, rails) need to be locateable using the $PATH. Make sure to setup properly
