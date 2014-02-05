@@ -32,7 +32,7 @@
     force: $force_migrate
   when: migrate
 
-- name: precompile asset files
+- name: precompile asset files if necessary
   rake:
     path: "{{ build_path }}"
     rails_env: "{{ rails_env }}"
@@ -40,4 +40,9 @@
     command: 'assets:precompile'
     diff_paths: $asset_precompile_diff_paths
     force: $force_asset_compilation
+  register: assets_changed
   when: compile_assets
+
+- name: copy asset files when not changed
+  shell: "cp -R {{ current_path }}/public/assets {{ build_path }}/public/assets"
+  when: assets_changed is defined and not assets_changed.changed
