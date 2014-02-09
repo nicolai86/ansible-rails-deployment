@@ -45,4 +45,4 @@
 
 - name: copy asset files when not changed
   shell: "cp -R {{ current_path }}/public/assets {{ build_path }}/public/assets"
-  when: assets_changed is defined and not assets_changed.changed
+  when: compile_assets and assets_changed is defined and not assets_changed.changed
