@@ -1,6 +1,6 @@
 {
   "name": "Ansible Rails Deployment",
-  "version": "0.6.2",
+  "version": "0.6.4",
   "homepage": "https://github.com/nicolai86/ansible-rails-deployment",
   "authors": [
     "Raphael Randschau"
@@ -8,9 +8,9 @@
   "description": "A role that executes common tasks when deploying ruby on rails applications.",
   "license": "MIT",
   "dependencies": {
-    "nicolai86.ansible-rails": "nicolai86/ansible-rails#v0.6.1",
+    "nicolai86.ansible-rails": "nicolai86/ansible-rails#v0.6.2",
     "nicolai86.ansible-deployment-facts": "nicolai86/ansible-deployment-facts#v0.1.2",
-    "nicolai86.prepare-release": "nicolai86/ansible-prepare-release#v0.1.3",
+    "nicolai86.prepare-release": "nicolai86/ansible-prepare-release#v0.1.9",
     "nicolai86.finalize-release": "nicolai86/ansible-finalize-release#v0.1"
   }
 }
