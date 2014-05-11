@@ -1,6 +1,6 @@
 {
   "name": "Ansible Rails Deployment",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "homepage": "https://github.com/nicolai86/ansible-rails-deployment",
   "authors": [
     "Raphael Randschau"
