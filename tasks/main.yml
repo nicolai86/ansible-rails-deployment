@@ -38,8 +38,8 @@
     rails_env: "{{ rails_env }}"
     bundled: yes
     command: 'assets:precompile'
-    diff_paths: "{{asset_precompile_diff_paths}}"
-    force: "{{force_asset_compilation}}"
+    diff_paths: "{{ asset_precompile_diff_paths }}"
+    force: "{{ force_asset_compilation }}"
   register: assets_changed
   when: compile_assets
 

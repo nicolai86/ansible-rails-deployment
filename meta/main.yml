@@ -15,5 +15,5 @@ galaxy_info:
   categories:
     - web
 dependencies:
-  - nicolai86.ansible-rails
+  - nicolai86.rails
   - nicolai86.deployment-facts
