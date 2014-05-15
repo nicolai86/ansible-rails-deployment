@@ -1,16 +1,11 @@
 - hosts: vm
   remote_user: vagrant
-  sudo: true
   gather_facts: no
+  sudo: true
   vars:
     user: vagrant
     home_directory: "/home/{{ user }}"
     deploy_to: "{{ home_directory }}"
-
-  pre_tasks:
-    - apt:
-        name: git-core
-        state: present
 
   roles:
     - rvm
@@ -18,7 +13,7 @@
       role: nicolai86.prepare-release
 
       repo: https://github.com/nicolai86/pattern-manager.git
-      branch: develop
+      branch: master
 
       symlinks:
         - { src: "{{ shared_path }}/config/database.yml", dest: "{{ build_path }}/config/database.yml" }

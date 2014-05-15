@@ -1,5 +1,12 @@
----
-# install RVM system wide
+- apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git-core
+    - curl
+    - build-essential
+    - libssl-dev
+
 - stat: path=/etc/profile.d/rvm.sh
   register: rvm_folder
 
@@ -15,23 +22,37 @@
   shell: "/usr/local/rvm/bin/rvm install 2.1.0"
   when: rubies.stdout.find('2.1.0') == -1
 
-# make RVM accessible to ansible as $user
-- name: "adjust GEM HOME"
+- file:
+    src: /usr/local/rvm/environments/ruby-2.1.0
+    dest: /usr/local/rvm/environments/default
+    state: link
+
+- lineinfile:
+    dest: "/home/vagrant/.bashrc"
+    regexp: "^export PATH=/usr/local/rvm/bin"
+    line: "export PATH=/usr/local/rvm/bin:$PATH"
+    insertafter: BOF
+    state: present
+
+- name: "adjust GEM HOME for user"
   lineinfile:
-    dest: "{{ home_directory }}/.bashrc"
+    dest: "/home/vagrant/.bashrc"
     regexp: "^export GEM_HOME"
     line: "export GEM_HOME=$HOME/.gem"
     insertbefore: BOF
     state: present
 
-- name: add gem paths variable
-  shell: "su {{ user }} -c 'gem env gempath'"
-  register: "gem_paths"
-
 - name: "add gem paths to path"
   lineinfile:
-    dest: "{{ home_directory }}/.bashrc"
-    regexp: "^export PATH="
-    line: "export PATH={{ gem_paths.stdout | split(':') | append('/bin') | join(':') }}:$PATH"
+    dest: "/home/vagrant/.bashrc"
+    regexp: "^export PATH=.GEM_HOME"
+    line: "export PATH=$GEM_HOME/bin:$PATH"
     insertafter: "GEM_HOME"
     state: present
+
+- name: "adjust GEM HOME for user"
+  lineinfile:
+    dest: "/home/vagrant/.bashrc"
+    regexp: "^source /usr/local/rvm/scripts/rvm"
+    line: "source /usr/local/rvm/scripts/rvm"
+    insertbefore: BOF
