@@ -4,7 +4,6 @@ galaxy_info:
   description: "deploys rails application like capistrano or mina do"
   license: MIT
   min_ansible_version: 1.4
-  version: 0.6.7
   platforms:
    - name: Ubuntu
      versions:
