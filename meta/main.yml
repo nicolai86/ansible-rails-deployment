@@ -17,5 +17,3 @@ galaxy_info:
 dependencies:
   - nicolai86.rails
   - nicolai86.deployment-facts
-  - nicolai86.prepare-release
-  - nicolai86.finalize-release
