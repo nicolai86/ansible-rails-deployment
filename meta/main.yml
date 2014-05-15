@@ -16,4 +16,3 @@ galaxy_info:
     - web
 dependencies:
   - nicolai86.rails
-  - nicolai86.deployment-facts
