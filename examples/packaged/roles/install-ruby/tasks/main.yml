@@ -1,4 +1,16 @@
 ---
+- apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - git-core
+    - curl
+    - build-essential
+    - libssl-dev
+    - libpq-dev
+    - nodejs
+
 - name: add brightbox ppa for ruby 2.1
   apt_repository:
     repo: 'ppa:brightbox/ruby-ng-experimental'
@@ -16,3 +28,6 @@
 
 - name: set ruby 2.1 as default
   shell: ruby-switch --set ruby2.1
+
+- name: install bundler
+  shell: gem install bundler

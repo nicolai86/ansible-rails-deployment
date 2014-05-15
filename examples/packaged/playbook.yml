@@ -6,11 +6,7 @@
     user: vagrant
     home_directory: "/home/{{ user }}"
     deploy_to: "{{ home_directory }}"
-
-  pre_tasks:
-    - apt:
-        name: git-core
-        state: present
+    rails_env: develop
 
   roles:
     - install-ruby
@@ -18,7 +14,7 @@
       role: nicolai86.prepare-release
 
       repo: https://github.com/nicolai86/pattern-manager.git
-      branch: develop
+      branch: master
 
       symlinks:
         - { src: "{{ shared_path }}/config/database.yml", dest: "{{ build_path }}/config/database.yml" }
@@ -32,8 +28,8 @@
     -
       role: nicolai86.rails-deployment
 
-      migrate: yes
-      compile_assets: yes
+      migrate: no
+      compile_assets: no
       force_migrate: no
       force_asset_compilation: no
 
