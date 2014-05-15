@@ -1,0 +1,41 @@
+- hosts: vm
+  remote_user: vagrant
+  sudo: true
+  gather_facts: no
+  vars:
+    user: vagrant
+    home_directory: "/home/{{ user }}"
+    deploy_to: "{{ home_directory }}"
+
+  pre_tasks:
+    - apt:
+        name: git-core
+        state: present
+
+  roles:
+    - install-ruby
+    -
+      role: nicolai86.prepare-release
+
+      repo: https://github.com/nicolai86/pattern-manager.git
+      branch: develop
+
+      symlinks:
+        - { src: "{{ shared_path }}/config/database.yml", dest: "{{ build_path }}/config/database.yml" }
+
+      directories:
+        - "{{ shared_path }}/config"
+
+      templates:
+        - { src: "templates/database.j2", dest: "{{ shared_path }}/config/database.yml" }
+
+    -
+      role: nicolai86.rails-deployment
+
+      migrate: yes
+      compile_assets: yes
+      force_migrate: no
+      force_asset_compilation: no
+
+    - nicolai86.finalize-release
+    - verify

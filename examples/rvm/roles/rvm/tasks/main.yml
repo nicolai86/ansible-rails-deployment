@@ -1,0 +1,37 @@
+---
+# install RVM system wide
+- stat: path=/etc/profile.d/rvm.sh
+  register: rvm_folder
+
+- name: install rvm
+  shell: "curl -sSL https://get.rvm.io | bash"
+  when: rvm_folder.stat.isdir is not defined
+
+- command: '/usr/local/rvm/bin/rvm list rubies'
+  register: rubies
+  changed_when: false
+
+- name: install ruby 2.1.0
+  shell: "/usr/local/rvm/bin/rvm install 2.1.0"
+  when: rubies.stdout.find('2.1.0') == -1
+
+# make RVM accessible to ansible as $user
+- name: "adjust GEM HOME"
+  lineinfile:
+    dest: "{{ home_directory }}/.bashrc"
+    regexp: "^export GEM_HOME"
+    line: "export GEM_HOME=$HOME/.gem"
+    insertbefore: BOF
+    state: present
+
+- name: add gem paths variable
+  shell: "su {{ user }} -c 'gem env gempath'"
+  register: "gem_paths"
+
+- name: "add gem paths to path"
+  lineinfile:
+    dest: "{{ home_directory }}/.bashrc"
+    regexp: "^export PATH="
+    line: "export PATH={{ gem_paths.stdout | split(':') | append('/bin') | join(':') }}:$PATH"
+    insertafter: "GEM_HOME"
+    state: present

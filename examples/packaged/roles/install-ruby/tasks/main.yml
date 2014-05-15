@@ -1,0 +1,18 @@
+---
+- name: add brightbox ppa for ruby 2.1
+  apt_repository:
+    repo: 'ppa:brightbox/ruby-ng-experimental'
+
+- name: install ruby 2.1
+  apt:
+    pkg: "{{item}}"
+    state: installed
+    update-cache: yes
+  with_items:
+    - ruby2.1
+    - ruby2.1-dev
+    - ruby2.1-doc
+    - ruby-switch
+
+- name: set ruby 2.1 as default
+  shell: ruby-switch --set ruby2.1
