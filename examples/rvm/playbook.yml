@@ -6,6 +6,7 @@
     user: vagrant
     home_directory: "/home/{{ user }}"
     deploy_to: "{{ home_directory }}"
+    rails_env: development
 
   roles:
     - rvm
@@ -27,8 +28,8 @@
     -
       role: nicolai86.rails-deployment
 
-      migrate: yes
-      compile_assets: yes
+      migrate: no
+      compile_assets: no
       force_migrate: no
       force_asset_compilation: no
 
