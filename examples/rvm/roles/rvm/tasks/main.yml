@@ -14,7 +14,7 @@
   register: rvm_folder
 
 - name: install rvm
-  shell: "curl -sSL https://get.rvm.io | bash --ruby=2.1.2"
+  shell: "curl -sSL https://get.rvm.io | bash -s stable --ruby=2.1.2"
   when: rvm_folder.stat.isdir is not defined
 
 - file:
