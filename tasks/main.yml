@@ -1,4 +1,5 @@
 ---
+# note: mostly for convenience when ssh'ing to your server.
 - name: add GEM_HOME to .bashrc
   lineinfile:
     dest: "{{ home_directory }}/.bashrc"
@@ -16,11 +17,12 @@
     state: present
 
 - name: execute bundler
-  bundle:
-    path: "{{ shared_path }}/vendor/bundle"
-    gemfile: "{{ build_path }}/Gemfile"
-    deployment: True
-    binstubs: True
+  command: "bundle install --path='{{ shared_path }}/vendor/bundle' --gemfile='{{ build_path }}/Gemfile' --deployment --binstubs=bin/"
+  register: bundler
+  changed_when: "'Installing' in bundler.stdout or 'Updating' in bundler.stdout or 'upgrade' in bundler.stdout"
+  environment:
+    GEM_HOME: "{{ home_directory }}/.gem"
+    PATH: "{{ home_directory }}/.gem/bin:$PATH"
 
 - name: migrate the database
   rake:
