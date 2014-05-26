@@ -25,21 +25,23 @@
 - name: migrate the database
   rake:
     path: "{{ build_path }}"
-    rails_env: "{{ rails_env }}"
     bundled: yes
     command: 'db:migrate'
     diff_paths: "{{migrate_diff_paths}}"
     force: "{{force_migrate}}"
+  environment:
+    RAILS_ENV: "{{ rails_env }}"
   when: migrate
 
 - name: precompile asset files if necessary
   rake:
     path: "{{ build_path }}"
-    rails_env: "{{ rails_env }}"
     bundled: yes
     command: 'assets:precompile'
     diff_paths: "{{ asset_precompile_diff_paths }}"
     force: "{{ force_asset_compilation }}"
+  environment:
+    RAILS_ENV: "{{ rails_env }}"
   register: assets_changed
   when: compile_assets
 
