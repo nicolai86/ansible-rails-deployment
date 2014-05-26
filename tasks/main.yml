@@ -5,7 +5,7 @@
     dest: "{{ home_directory }}/.bashrc"
     insertafter: BOF
     regexp: ^export.GEM_HOME
-    line: "export GEM_HOME=$HOME/.gem"
+    line: "export GEM_HOME={{ gem_home }}"
     state: present
 
 - name: update PATH with $GEM_HOME/bin
@@ -13,7 +13,7 @@
     dest: "{{ home_directory }}/.bashrc"
     insertafter: BOF
     regexp: ^export.PATH=.GEM_HOME
-    line: "export PATH=$GEM_HOME/bin:$PATH"
+    line: "export PATH={{ gem_home }}/bin:$PATH"
     state: present
 
 - name: execute bundler
@@ -21,8 +21,8 @@
   register: bundler
   changed_when: "'Installing' in bundler.stdout or 'Updating' in bundler.stdout or 'upgrade' in bundler.stdout"
   environment:
-    GEM_HOME: "{{ home_directory }}/.gem"
-    PATH: "{{ home_directory }}/.gem/bin:$PATH"
+    GEM_HOME: "{{ gem_home }}"
+    PATH: "{{ gem_home }}/bin:$PATH"
 
 - name: migrate the database
   rake:

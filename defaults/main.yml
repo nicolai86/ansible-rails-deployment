@@ -20,3 +20,6 @@ asset_precompile_diff_paths:
   - { current: "{{ current_path }}/app/assets", next: "{{ build_path }}/app/assets" }
   - { current: "{{ current_path }}/vendor/assets", next: "{{ build_path }}/vendor/assets" }
   - { current: "{{ current_path }}/Gemfile.lock", next: "{{ build_path }}/Gemfile.lock" }
+
+# assumptions about the ruby setup.
+gem_home: "{{ home_directory }}/.gem"
