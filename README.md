@@ -86,6 +86,14 @@ See defaults/main.yml for details about available variables.
 
   - all gem binaries (e.g. bundle, rake, rails) need to be locateable using the $PATH. Make sure to setup properly
 
+If you are using rbenv to manage your ruby version make sure to properly set the environment using
+something like this:
+
+```
+environment:
+  PATH: '~/.rbenv/shims:~/.rbenv/bin:"$PATH"'
+```
+
 #### important features:
 
   - it can be reused multiple times inside a single playbook for separate deployments.

@@ -1,0 +1,37 @@
+- hosts: vm
+  remote_user: vagrant
+  gather_facts: no
+  sudo: true
+  vars:
+    user: vagrant
+    home_directory: "/home/{{ user }}"
+    deploy_to: "{{ home_directory }}"
+    rails_env: development
+
+  roles:
+    - rbenv
+    -
+      role: nicolai86.prepare-release
+
+      repo: https://github.com/nicolai86/pattern-manager.git
+      branch: master
+
+      symlinks:
+        - { src: "{{ shared_path }}/config/database.yml", dest: "{{ build_path }}/config/database.yml" }
+
+      directories:
+        - "{{ shared_path }}/config"
+
+      templates:
+        - { src: "templates/database.j2", dest: "{{ shared_path }}/config/database.yml" }
+
+    -
+      role: nicolai86.rails-deployment
+
+      migrate: no
+      compile_assets: no
+      force_migrate: no
+      force_asset_compilation: no
+
+    - nicolai86.finalize-release
+    - verify

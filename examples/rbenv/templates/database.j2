@@ -1,0 +1,8 @@
+default: &default
+  adapter: sqlite
+  encoding: unicode
+  pool: 5
+
+development:
+  <<: *default
+  database: pattern-manager_development

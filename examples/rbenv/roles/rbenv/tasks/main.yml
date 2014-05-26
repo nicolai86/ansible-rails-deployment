@@ -1,0 +1,41 @@
+- apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - git-core
+    - curl
+    - build-essential
+    - libssl-dev
+    - libpq-dev
+    - nodejs
+
+# TODO RBENV install
+# TODO ruby install
+# TODO RBENV_ROOT
+
+- name: "adjust GEM HOME for user"
+  lineinfile:
+    dest: "/home/vagrant/.bashrc"
+    regexp: "^export GEM_HOME"
+    line: "export GEM_HOME=$HOME/.gem"
+    insertbefore: BOF
+    state: present
+
+- name: "add gem paths to path"
+  lineinfile:
+    dest: "/home/vagrant/.bashrc"
+    regexp: "^export PATH=.GEM_HOME"
+    line: "export PATH=$GEM_HOME/bin:$PATH"
+    insertafter: "GEM_HOME"
+    state: present
+
+- name: "adjust GEM HOME for user"
+  lineinfile:
+    dest: "/home/vagrant/.bashrc"
+    regexp: "^source /usr/local/rvm/scripts/rvm"
+    line: "source /usr/local/rvm/scripts/rvm"
+    insertbefore: BOF
+
+- name: install bundler
+  shell: gem install bundler
