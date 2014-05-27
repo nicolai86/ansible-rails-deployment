@@ -37,7 +37,7 @@
     RAILS_ENV: "{{ rails_env }}"
     PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
     GEM_HOME: "{{ gem_home }}"
-  when: migrate and (schema.changed or force_migrate)
+  when: migrate and (force_migrate or rails_schema|changed)
 
 - name: check assets for diffs
   diff:
@@ -51,7 +51,7 @@
     RAILS_ENV: "{{ rails_env }}"
     PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
     GEM_HOME: "{{ gem_home }}"
-  when: compile_assets and (assets.changed or force_asset_compilation)
+  when: compile_assets and (assets|changed or force_asset_compilation)
 
 - name: copy asset files when not changed
   shell: "cp -R {{ current_path }}/public/assets {{ build_path }}/public/assets"

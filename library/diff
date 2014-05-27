@@ -1,0 +1,74 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# (c) 2014, Raphael Randschau <nicolai86@me.com>
+
+DOCUMENTATION = '''
+---
+module: rake
+short_description: Run rake commands
+version_added: "1.0"
+author: Raphael Randschau
+options:
+  paths:
+    description:
+      - paths to check for diffs. Format expected is { next: "/bar" ,current: "/foo" }
+    required: yes
+'''
+
+EXAMPLES = '''
+# check paths for diffs
+diff: paths=[{ next: "/bar", current: "/foo" }]
+'''
+
+import re
+import filecmp
+import os
+import sys
+import subprocess
+from subprocess import check_output
+
+class DiffModule(object):
+    diffs = []
+    def __init__(self):
+        self.diffs = []
+
+    def diff(self, path_a, path_b):
+        """returns False if both paths are the same, otherwise True"""
+        if not os.path.exists(path_a) and not os.path.exists(path_b):
+            return False
+
+        rc = subprocess.call(['diff', '-r', path_a, path_b])
+        return rc
+
+    def check(self, paths):
+        has_diffs = False
+        if paths != None and len(paths) > 0:
+            for path in paths:
+                path['current'] = os.path.realpath(path['current'])
+                path['next'] = os.path.realpath(path['next'])
+
+                diff_rc = self.diff(path['current'], path['next'])
+                if diff_rc != 0:
+                    path['rc'] = diff_rc
+                    self.diffs.append(path)
+                has_diffs = has_diffs or (diff_rc != 0)
+        return has_diffs
+
+def main():
+    module = AnsibleModule(
+        argument_spec = dict(
+            paths      = dict(required=False, type='list')
+        ),
+        supports_check_mode = True,
+        mutually_exclusive = [ ],
+    )
+
+    diff = DiffModule()
+
+    paths = module.params['paths']
+    module.exit_json(paths=paths, changed=diff.check(paths), diffs=diff.diffs)
+
+from ansible.module_utils.basic import *
+
+main()
