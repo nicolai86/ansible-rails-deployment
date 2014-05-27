@@ -29,5 +29,7 @@
 - name: set ruby 2.1 as default
   shell: ruby-switch --set ruby2.1
 
-- name: install bundler
-  shell: gem install bundler
+- gem:
+    name: bundler
+    state: present
+    user_install: no

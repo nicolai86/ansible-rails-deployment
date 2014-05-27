@@ -17,20 +17,37 @@
     state: present
 
 - name: execute bundler
-  command: "bundle install --path='{{ shared_path }}/vendor/bundle' --gemfile='{{ build_path }}/Gemfile' --deployment --binstubs=bin/"
+  shell: chdir="{{ build_path }}" bundle install --path='{{ shared_path }}/vendor/bundle' --gemfile='./Gemfile' --deployment --binstubs='./bin'
   register: bundler
-  changed_when: "'Installing' in bundler.stdout or 'Updating' in bundler.stdout or 'upgrade' in bundler.stdout"
+  changed_when: "'Installing' in bundler or 'Updating' in bundler or 'upgrade' in bundler"
   environment:
     GEM_HOME: "{{ gem_home }}"
-    PATH: "{{ gem_home }}/bin:$PATH"
+    PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+
+# - command: "diff -r -q {{ item.next }} {{ item.current }}"
+#   register: migrate_output
+#   with_items:
+#     - { current: "{{ current_path }}/db/schema.rb", next: "{{ build_path }}/db/schema.rb" }
+#     - { current: "{{ current_path }}/db/structure.sql", next: "{{ build_path }}/db/structure.sql" }
+#     - "{{ migrate_diff_paths }}"
+#   tags: test
+
+# - debug:
+#     var: migrate_output
+#   tags: test
+
+# - debug:
+#     msg: "changed"
+#   when: failed in migrate_output or force_migrate
+#   tags: test
 
 - name: migrate the database
   rake:
     path: "{{ build_path }}"
     bundled: yes
     command: 'db:migrate'
-    diff_paths: "{{migrate_diff_paths}}"
-    force: "{{force_migrate}}"
+    diff_paths: "{{ migrate_diff_paths }}"
+    force: "{{ force_migrate }}"
   environment:
     RAILS_ENV: "{{ rails_env }}"
   when: migrate

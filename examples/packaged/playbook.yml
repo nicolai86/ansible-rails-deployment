@@ -1,7 +1,7 @@
 - hosts: vm
   remote_user: vagrant
   sudo: true
-  gather_facts: no
+  gather_facts: yes
   vars:
     user: vagrant
     home_directory: "/home/{{ user }}"
