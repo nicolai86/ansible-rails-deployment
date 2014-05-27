@@ -13,5 +13,4 @@ galaxy_info:
       - saucy
   categories:
     - web
-dependencies:
-  - nicolai86.rails
+dependencies: []

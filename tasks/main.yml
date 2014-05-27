@@ -17,53 +17,42 @@
     state: present
 
 - name: execute bundler
-  shell: chdir="{{ build_path }}" bundle install --path='{{ shared_path }}/vendor/bundle' --gemfile='./Gemfile' --deployment --binstubs='./bin'
+  command: chdir="{{ build_path }}" bundle install --path='{{ shared_path }}/vendor/bundle' --gemfile='./Gemfile' --deployment --binstubs='./bin'
   register: bundler
   changed_when: "'Installing' in bundler or 'Updating' in bundler or 'upgrade' in bundler"
   environment:
     GEM_HOME: "{{ gem_home }}"
     PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+    RAILS_ENV: "{{ rails_env }}"
 
-# - command: "diff -r -q {{ item.next }} {{ item.current }}"
-#   register: migrate_output
-#   with_items:
-#     - { current: "{{ current_path }}/db/schema.rb", next: "{{ build_path }}/db/schema.rb" }
-#     - { current: "{{ current_path }}/db/structure.sql", next: "{{ build_path }}/db/structure.sql" }
-#     - "{{ migrate_diff_paths }}"
-#   tags: test
-
-# - debug:
-#     var: migrate_output
-#   tags: test
-
-# - debug:
-#     msg: "changed"
-#   when: failed in migrate_output or force_migrate
-#   tags: test
+- name: check schema for diffs
+  diff:
+    paths: "{{ migrate_diff_paths }}"
+  when: migrate
+  register: schema
 
 - name: migrate the database
-  rake:
-    path: "{{ build_path }}"
-    bundled: yes
-    command: 'db:migrate'
-    diff_paths: "{{ migrate_diff_paths }}"
-    force: "{{ force_migrate }}"
+  command: chdir="{{ build_path }}" bundle exec rake db:migrate
   environment:
     RAILS_ENV: "{{ rails_env }}"
-  when: migrate
+    PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+    GEM_HOME: "{{ gem_home }}"
+  when: migrate and (schema.changed or force_migrate)
+
+- name: check assets for diffs
+  diff:
+    paths: "{{ asset_precompile_diff_paths }}"
+  when: compile_assets
+  register: assets
 
 - name: precompile asset files if necessary
-  rake:
-    path: "{{ build_path }}"
-    bundled: yes
-    command: 'assets:precompile'
-    diff_paths: "{{ asset_precompile_diff_paths }}"
-    force: "{{ force_asset_compilation }}"
+  command: chdir="{{ build_path }}" bundle exec rake assets:precompile
   environment:
     RAILS_ENV: "{{ rails_env }}"
-  register: assets_changed
-  when: compile_assets
+    PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+    GEM_HOME: "{{ gem_home }}"
+  when: compile_assets and (assets.changed or force_asset_compilation)
 
 - name: copy asset files when not changed
   shell: "cp -R {{ current_path }}/public/assets {{ build_path }}/public/assets"
-  when: compile_assets and assets_changed is defined and not assets_changed.changed
+  when: compile_assets and assets is defined and not assets.changed

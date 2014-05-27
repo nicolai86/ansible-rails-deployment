@@ -1,0 +1,26 @@
+---
+- lineinfile:
+    dest: "{{ build_path }}/Gemfile"
+    line: "gem 'pg'"
+    insertbefore: EOF
+    state: absent
+
+- lineinfile:
+    dest: "{{ build_path }}/Gemfile"
+    regexp: "sqlite3"
+    line: "gem 'sqlite3'"
+    insertbefore: BOF
+    state: present
+
+- name: execute bundler
+  command: chdir="{{ build_path }}" bundle install --path='{{ shared_path }}/vendor/bundle' --gemfile='./Gemfile' --binstubs='./bin'
+  environment:
+    GEM_HOME: "{{ gem_home }}"
+    PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+    RAILS_ENV: "{{ rails_env }}"
+
+- command: chdir="{{ build_path }}" bundle exec rake db:create
+  environment:
+    RAILS_ENV: "{{ rails_env }}"
+    PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+    GEM_HOME: "{{ gem_home }}"

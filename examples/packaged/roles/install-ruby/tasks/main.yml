@@ -10,6 +10,7 @@
     - libssl-dev
     - libpq-dev
     - nodejs
+    - libsqlite3-dev
 
 - name: add brightbox ppa for ruby 2.1
   apt_repository:

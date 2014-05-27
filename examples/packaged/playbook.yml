@@ -6,7 +6,13 @@
     user: vagrant
     home_directory: "/home/{{ user }}"
     deploy_to: "{{ home_directory }}"
-    rails_env: develop
+
+    rails_env: development
+
+    gem_home: "{{ home_directory }}/.gem"
+    asset_precompile_diff_paths:
+      - { current: "{{ current_path }}/app/assets", next: "{{ build_path }}/app/assets" }
+      - { current: "{{ current_path }}/vendor/assets", next: "{{ build_path }}/vendor/assets" }
 
   roles:
     - install-ruby
@@ -18,18 +24,22 @@
 
       symlinks:
         - { src: "{{ shared_path }}/config/database.yml", dest: "{{ build_path }}/config/database.yml" }
+        - { src: "{{ shared_path }}/_db", dest: "{{ build_path }}/_db" }
 
       directories:
         - "{{ shared_path }}/config"
+        - "{{ shared_path }}/_db"
 
       templates:
         - { src: "templates/database.j2", dest: "{{ shared_path }}/config/database.yml" }
 
+    - setup-db
+
     -
       role: nicolai86.rails-deployment
 
-      migrate: no
-      compile_assets: no
+      migrate: yes
+      compile_assets: yes
       force_migrate: no
       force_asset_compilation: no
 
