@@ -29,7 +29,7 @@
   diff:
     paths: "{{ migrate_diff_paths }}"
   when: migrate
-  register: schema
+  register: rails_schema
 
 - name: migrate the database
   command: chdir="{{ build_path }}" bundle exec rake db:migrate
