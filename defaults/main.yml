@@ -23,3 +23,6 @@ asset_precompile_diff_paths:
 
 # assumptions about the ruby setup.
 gem_home: "{{ home_directory }}/.gem"
+
+# custom paths necessary to locate bundler, rake, ... (e.g. your rbenv shims directory)
+rails_bin_paths: []
