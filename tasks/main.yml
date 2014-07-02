@@ -22,7 +22,7 @@
   changed_when: "'Installing' in bundler or 'Updating' in bundler or 'upgrade' in bundler"
   environment:
     GEM_HOME: "{{ gem_home }}"
-    PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ gem_home }}/bin:{{ rails_bin_paths | union([ansible_env.PATH]) | join(':') }}"
     RAILS_ENV: "{{ rails_env }}"
 
 - name: check schema for diffs
@@ -35,7 +35,7 @@
   command: chdir="{{ build_path }}" bundle exec rake db:migrate
   environment:
     RAILS_ENV: "{{ rails_env }}"
-    PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ gem_home }}/bin:{{ rails_bin_paths | union([ansible_env.PATH]) | join(':') }}"
     GEM_HOME: "{{ gem_home }}"
   when: migrate and (force_migrate or rails_schema|changed)
 
@@ -49,7 +49,7 @@
   command: chdir="{{ build_path }}" bundle exec rake assets:precompile
   environment:
     RAILS_ENV: "{{ rails_env }}"
-    PATH: "{{ gem_home }}/bin:{{ ansible_env.PATH }}"
+    PATH: "{{ gem_home }}/bin:{{ rails_bin_paths | union([ansible_env.PATH]) | join(':') }}"
     GEM_HOME: "{{ gem_home }}"
   when: compile_assets and (assets|changed or force_asset_compilation)
 
