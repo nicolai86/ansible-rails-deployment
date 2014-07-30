@@ -5,9 +5,6 @@ A role that executes common tasks when deploying ruby on rails applications.
 Depends on [prepare-release][1] and [finalize-release][2] roles to checkout a new
 version from your git versioned application.
 
-Since v0.5 this is just a role to execute bundler - and rails/ rake related commands
-defined in [ansible-rails][3].
-
 example usage:
 
     ---
