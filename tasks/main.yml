@@ -13,7 +13,7 @@
     dest: "{{ home_directory }}/.bashrc"
     insertafter: BOF
     regexp: ^export.PATH=.GEM_HOME
-    line: "export PATH={{ gem_home }}/bin:$PATH"
+    line: "export PATH=$GEM_HOME/bin:$PATH"
     state: present
 
 - name: execute bundler
