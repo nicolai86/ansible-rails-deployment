@@ -1,12 +1,17 @@
 - hosts: vm
   remote_user: vagrant
-  gather_facts: no
+  gather_facts: yes
   sudo: true
   vars:
     user: vagrant
     home_directory: "/home/{{ user }}"
     deploy_to: "{{ home_directory }}"
     rails_env: development
+    rails_bin_paths:
+      - /usr/local/rvm/gems/ruby-2.1.2@global/bin
+      - /usr/local/rvm/bin
+      - /usr/local/rvm/gems/ruby-2.1.2/bin
+      - /usr/local/rvm/rubies/ruby-2.1.2/bin
 
   roles:
     - rvm
