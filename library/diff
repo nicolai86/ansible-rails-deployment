@@ -1,12 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# (c) 2014, Raphael Randschau <nicolai86@me.com>
+# (c) 2014-2015, Raphael Randschau <nicolai86@me.com>
 
 DOCUMENTATION = '''
 ---
-module: rake
-short_description: Run rake commands
+module: diff
+short_description: diffs directories and files
 version_added: "1.0"
 author: Raphael Randschau
 options:

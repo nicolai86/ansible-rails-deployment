@@ -1,4 +1,10 @@
 ---
+- merge:
+    dicts:
+      - "{{ default_environment }}"
+      - "{{ custom_environment }}"
+    var: command_environment
+
 # note: mostly for convenience when ssh'ing to your server.
 - name: add GEM_HOME to .bashrc
   lineinfile:
@@ -20,10 +26,7 @@
   command: chdir="{{ build_path }}" bundle install --path='{{ shared_path }}/vendor/bundle' --gemfile='./Gemfile' --deployment --binstubs='./bin'
   register: bundler
   changed_when: "'Installing' in bundler or 'Updating' in bundler or 'upgrade' in bundler"
-  environment:
-    GEM_HOME: "{{ gem_home }}"
-    PATH: "{{ gem_home }}/bin:{{ rails_bin_paths | union([ansible_env.PATH]) | join(':') }}"
-    RAILS_ENV: "{{ rails_env }}"
+  environment: command_environment
 
 - name: check schema for diffs
   diff:
@@ -33,10 +36,7 @@
 
 - name: migrate the database
   command: chdir="{{ build_path }}" bundle exec rake db:migrate
-  environment:
-    RAILS_ENV: "{{ rails_env }}"
-    PATH: "{{ gem_home }}/bin:{{ rails_bin_paths | union([ansible_env.PATH]) | join(':') }}"
-    GEM_HOME: "{{ gem_home }}"
+  environment: command_environment
   when: migrate and (force_migrate or rails_schema|changed)
 
 - name: check assets for diffs
@@ -47,10 +47,7 @@
 
 - name: precompile asset files if necessary
   command: chdir="{{ build_path }}" bundle exec rake assets:precompile
-  environment:
-    RAILS_ENV: "{{ rails_env }}"
-    PATH: "{{ gem_home }}/bin:{{ rails_bin_paths | union([ansible_env.PATH]) | join(':') }}"
-    GEM_HOME: "{{ gem_home }}"
+  environment: command_environment
   when: compile_assets and (assets|changed or force_asset_compilation)
 
 - name: copy asset files when not changed

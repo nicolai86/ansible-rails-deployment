@@ -1,0 +1,55 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# (c) 2015, Raphael Randschau <nicolai86@me.com>
+
+DOCUMENTATION = '''
+---
+module: merge
+short_description: merge dictionaries, export as ansible variable
+version_added: "1.0"
+author: Raphael Randschau
+options:
+  var:
+    description:
+      - variable to export as
+  dicts:
+    description:
+      - dicts to merge
+    required: yes
+'''
+
+EXAMPLES = '''
+# merge dicts, exports as foo
+merge: dicts=[{ 'next': "/bar" },{'current': "/foo" }] var=blubb
+'''
+
+def main():
+    module = AnsibleModule(
+        argument_spec = dict(
+            dicts      = dict(required=True, type='list'),
+            var        = dict(required=True, type='str')
+        ),
+        supports_check_mode = True
+    )
+
+    dicts = module.params['dicts']
+
+    # merge all dictionaries
+    merged_dicts= {}
+    for d in dicts:
+        # NOTE this will fail if d is no dict. This is on purpose!
+        merged_dicts.update(d)
+
+    # export as provided var
+    merged = {}
+    merged[module.params['var']] = merged_dicts
+
+    result = {}
+    result['ansible_facts'] = merged
+
+    module.exit_json(**result)
+
+from ansible.module_utils.basic import *
+
+main()
