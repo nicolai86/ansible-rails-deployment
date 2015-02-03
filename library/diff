@@ -28,12 +28,18 @@ import sys
 import subprocess
 from subprocess import check_output
 
+def flatten(items, seqtypes=(list, tuple)):
+    for i, x in enumerate(items):
+        while isinstance(items[i], seqtypes):
+            items[i:i+1] = items[i]
+    return items
+
 class DiffModule(object):
     diffs = []
     def __init__(self):
         self.diffs = []
 
-    def diff(self, path_a, path_b):
+    def _diff(self, path_a, path_b):
         """returns False if both paths are the same, otherwise True"""
         if not os.path.exists(path_a) and not os.path.exists(path_b):
             return False
@@ -44,11 +50,17 @@ class DiffModule(object):
     def check(self, paths):
         has_diffs = False
         if paths != None and len(paths) > 0:
-            for path in paths:
-                path['current'] = os.path.realpath(path['current'])
-                path['next'] = os.path.realpath(path['next'])
+            for path in flatten(paths):
+                if isinstance(path, list) or isinstance(path, tuple):
+                    path = path[0]
 
-                diff_rc = self.diff(path['current'], path['next'])
+                if not isinstance(path, dict):
+                    raise Exception('''all paths must be dict({'current': '/some/path', 'next': '/other/path'}). Got ''' + type(path).__name__)
+
+                path['current'] = os.path.realpath(path['current'])
+                path['next']    = os.path.realpath(path['next'])
+
+                diff_rc = self._diff(path['current'], path['next'])
                 if diff_rc != 0:
                     path['rc'] = diff_rc
                     self.diffs.append(path)
@@ -67,7 +79,8 @@ def main():
     diff = DiffModule()
 
     paths = module.params['paths']
-    module.exit_json(paths=paths, changed=diff.check(paths), diffs=diff.diffs)
+    has_diffs = diff.check(paths)
+    module.exit_json(paths=paths, changed=has_diffs, diffs=diff.diffs)
 
 from ansible.module_utils.basic import *
 

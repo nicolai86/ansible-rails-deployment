@@ -5,7 +5,7 @@
       - "{{ custom_environment }}"
     var: command_environment
 
-# note: mostly for convenience when ssh'ing to your server.
+# note: mostly for convenience when ssh'ing to your server so you can run ruby related commands properly
 - name: add GEM_HOME to .bashrc
   lineinfile:
     dest: "{{ home_directory }}/.bashrc"
@@ -23,7 +23,7 @@
     state: present
 
 - name: execute bundler
-  command: chdir="{{ build_path }}" bundle install --path='{{ shared_path }}/vendor/bundle' --gemfile='./Gemfile' --deployment --binstubs='./bin'
+  command: chdir="{{ build_path }}" bundle install --path='{{ shared_bundle_path }}' {{ bundle_install_options|default(default_bundle_install_options) }}
   register: bundler
   changed_when: "'Installing' in bundler or 'Updating' in bundler or 'upgrade' in bundler"
   environment: command_environment

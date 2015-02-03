@@ -12,14 +12,27 @@ force_asset_compilation: no
 
 # paths to check by default for changes when running migrations
 migrate_diff_paths:
-  - { current: "{{ current_path }}/db/schema.rb", next: "{{ build_path }}/db/schema.rb" }
-  - { current: "{{ current_path }}/db/structure.sql", next: "{{ build_path }}/db/structure.sql" }
+  -
+    current: "{{ current_path }}/db/schema.rb"
+    next: "{{ build_path }}/db/schema.rb"
+  -
+    current: "{{ current_path }}/db/structure.sql"
+    next: "{{ build_path }}/db/structure.sql"
+  -
+    current: "{{ current_path }}/db/migrate"
+    next: "{{ build_path }}/db/migrate"
 
 # paths to check by defualt for changes when compiling assets
 asset_precompile_diff_paths:
-  - { current: "{{ current_path }}/app/assets", next: "{{ build_path }}/app/assets" }
-  - { current: "{{ current_path }}/vendor/assets", next: "{{ build_path }}/vendor/assets" }
-  - { current: "{{ current_path }}/Gemfile.lock", next: "{{ build_path }}/Gemfile.lock" }
+  -
+    current: "{{ current_path }}/app/assets"
+    next: "{{ build_path }}/app/assets"
+  -
+    current: "{{ current_path }}/vendor/assets"
+    next: "{{ build_path }}/vendor/assets"
+  -
+    current: "{{ current_path }}/Gemfile.lock"
+    next: "{{ build_path }}/Gemfile.lock"
 
 # assumptions about the ruby setup.
 gem_home: "{{ home_directory }}/.gem"
@@ -38,3 +51,11 @@ default_environment:
 
 # you can add custom variables to the command environment here
 custom_environment: {}
+
+shared_bundle_path: "{{ shared_path }}/vendor/bundle"
+
+# you can overwrite the options used to bundle install by setting
+# bundle_install_options:
+
+# default options for bundle_install_options
+default_bundle_install_options: "--gemfile='./Gemfile' --deployment --binstubs='./bin'"
