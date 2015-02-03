@@ -42,7 +42,7 @@ class DiffModule(object):
     def _diff(self, path_a, path_b):
         """returns False if both paths are the same, otherwise True"""
         if not os.path.exists(path_a) and not os.path.exists(path_b):
-            return False
+            return 0
 
         rc = subprocess.call(['diff', '-r', '-q', path_a, path_b])
         return rc
