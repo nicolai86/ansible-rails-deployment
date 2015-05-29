@@ -40,7 +40,7 @@ class DiffModule(object):
         self.diffs = []
 
     def _diff(self, path_a, path_b):
-        """returns False if both paths are the same, otherwise True"""
+        """returns 0 if both paths are the same, otherwise 1"""
         if not os.path.exists(path_a) and not os.path.exists(path_b):
             return 0
 
