@@ -17,7 +17,7 @@
 - name: update PATH with $GEM_HOME/bin
   lineinfile:
     dest: "{{ home_directory }}/.bashrc"
-    insertafter: BOF
+    insertafter: ^export.GEM_HOME
     regexp: ^export.PATH=.GEM_HOME
     line: "export PATH=$GEM_HOME/bin:$PATH"
     state: present
@@ -33,6 +33,8 @@
     paths: "{{ migrate_diff_paths }}"
   when: migrate
   register: rails_schema
+
+- debug: var=rails_schema
 
 - name: migrate the database
   command: chdir="{{ build_path }}" bundle exec rake db:migrate
