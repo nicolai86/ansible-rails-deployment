@@ -26,7 +26,7 @@
   command: chdir="{{ build_path }}" bundle install --path='{{ shared_bundle_path }}' {{ bundle_install_options|default(default_bundle_install_options) }}
   register: bundler
   changed_when: "'Installing' in bundler or 'Updating' in bundler or 'upgrade' in bundler"
-  environment: command_environment
+  environment: "{{ command_environment }}"
 
 - name: check schema for diffs
   diff:
@@ -38,7 +38,7 @@
 
 - name: migrate the database
   command: chdir="{{ build_path }}" bundle exec rake db:migrate
-  environment: command_environment
+  environment: "{{ command_environment }}"
   when: migrate and (force_migrate or rails_schema|changed)
 
 - name: check assets for diffs
@@ -49,7 +49,7 @@
 
 - name: precompile asset files if necessary
   command: chdir="{{ build_path }}" bundle exec rake assets:precompile
-  environment: command_environment
+  environment: "{{ command_environment }}"
   when: compile_assets and (assets|changed or force_asset_compilation)
 
 - name: copy asset files when not changed
